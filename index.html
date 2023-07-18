@@ -1,282 +1,256 @@
 <html>
 <head>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    <style>
+        /* 设置页面背景颜色为浅灰色 */
+        body {
+            background-color: #f0f0f0;
+        }
 
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f0f0f0;
-    }
+        /* 设置标题样式 */
+        h1 {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 36px;
+            color: #333333;
+            text-align: center;
+            margin-top: 50px;
+        }
 
-    .container {
-      width: 80%;
-      max-width: 800px;
-      margin: 20px auto;
-      background-color: white;
-      border-radius: 10px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      padding: 20px;
-    }
+        /* 设置副标题样式 */
+        h2 {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 24px;
+            color: #666666;
+            text-align: center;
+            margin-top: 20px;
+        }
 
-    h1 {
-      text-align: center;
-      color: #333333;
-    }
+        /* 设置文本框样式 */
+        textarea {
+            width: 600px;
+            height: 200px;
+            border: 2px solid #cccccc;
+            border-radius: 10px;
+            padding: 10px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            color: #333333;
+            resize: none;
+        }
 
-    p {
-      text-align: center;
-      color: #666666;
-    }
+        /* 设置按钮样式 */
+        button {
+            width: 100px;
+            height: 40px;
+            border: none;
+            border-radius: 10px;
+            background-color: #3399ff;
+            color: white;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 16px;
+        }
 
-    .input {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
+        /* 设置摘要框样式 */
+        div {
+            width: 600px;
+            height: auto;
+            border: 2px solid #cccccc;
+            border-radius: 10px;
+            padding: 10px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            color: #333333;
+        }
 
-    textarea {
-      width: 90%;
-      height: 200px;
-      border: 1px solid #cccccc;
-      border-radius: 5px;
-      padding: 10px;
-      font-size: 16px;
-      resize: none;
-    }
-
-    select {
-      width: 90%;
-      height: 40px;
-      border: 1px solid #cccccc;
-      border-radius: 5px;
-      padding: 10px;
-      font-size: 16px;
-    }
-
-    button {
-      width: 90%;
-      height: 40px;
-      border: none;
-      border-radius: 5px;
-      background-color: #0099ff;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #0077cc;
-    }
-
-    .output {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .summary {
-      width: 90%;
-      height: auto;
-      border: 1px solid #cccccc;
-      border-radius: 5px;
-      padding: 10px;
-      font-size: 16px; 
-    }
-
-    .score {
-     width :90%;
-     height:auto; 
-     border:none; 
-     font-size :16 px; 
-     color :#0099ff; 
-     text-align :right; 
-     margin-top :10 px; 
-   }
-
-   .keywords {
-     width :90%;
-     height:auto; 
-     border:none; 
-     font-size :16 px; 
-     color :#333333; 
-     text-align :left; 
-     margin-top :10 px; 
-   }
-
-   .references {
-     width :90%;
-     height:auto; 
-     border:none; 
-     font-size :16 px; 
-     color :#333333; 
-     text-align :left; 
-     margin-top :10 px; 
-   }
- </style>
+        /* 设置居中布局 */
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    </style>
 </head>
 <body>
- <div class="container">
-   <h1>文本摘要工具 Text Summarizer</h1>
-   <p>快速提取文本中的主要信息和观点 Quickly extract the main information and opinions from the text</p>
-   <div class="input">
-     <textarea id="text" placeholder="在这里输入您的文本或粘贴链接 Enter your text or paste a link here"></textarea>
-     <select id="language">
-       <option value="zh">中文 Chinese</option>
-       <option value="en">英文 English</option>
-     </select>
-     <button id="summarize" onclick="summarize()">生成摘要 Generate Summary</button>
-   </div>
-   <div class="output">
-     <div class="summary" id="summary"></div>
-     <div class="score" id="score"></div>
-     <div class="keywords" id="keywords"></div>
-     <div class="references" id="references"></div>
-   </div>
- </div>
+    <h1>文本摘要工具 Text Summarizer</h1>
+    <h2>快速提取文本中的主要信息和观点 Quickly extract the main information and opinions from the text</h2>
+    <div class="container">
+        <!-- 创建一个文本框用于输入原始文本 -->
+        <textarea id="input" placeholder="请输入原始文本或粘贴网页链接 Please enter the original text or paste the web page link"></textarea>
+        <!-- 创建一个按钮用于触发摘要生成 -->
+        <button id="summarize" onclick="summarize()">生成摘要 Summarize</button>
+        <!-- 创建一个摘要框用于显示摘要结果 -->
+        <div id="output" hidden></div>
+    </div>
 
- <script>
+    <script>
+        // 定义一个函数用于生成摘要
+        function summarize() {
+            // 获取输入框的值
+            var input = document.getElementById("input").value;
 
- // A simple text summarization algorithm based on sentence scoring and ranking
- function summarize() {
+            // 判断输入是否为空
+            if (input == "") {
+                alert("请输入原始文本或粘贴网页链接 Please enter the original text or paste the web page link");
+                return; // 结束函数
+            }
 
-   // Get the input text and language from the HTML elements
-   var text = document.getElementById("text").value.trim();
-   var language = document.getElementById("language").value;
+            // 判断输入是否为网页链接
+            if (input.startsWith("http")) {
+                // 使用fetch函数获取网页内容
+                fetch(input)
+                    .then(response => response.text()) // 将响应转换为文本
+                    .then(html => { // 处理文本
+                        // 使用DOMParser对象解析HTML文本
+                        var parser = new DOMParser();
+                        var doc = parser.parseFromString(html, "text/html");
 
-   // Check if the input is empty or not
-   if (text == "") {
-     alert("请输入文本或粘贴链接 Please enter some text or paste a link");
-     return;
-   }
+                        // 获取网页标题
+                        var title = doc.querySelector("title").innerText;
 
-   // Check if the input is a valid URL or not
-   var isURL = false;
-   try {
-     new URL(text);
-     isURL = true;
-   } catch (e) {
-     isURL = false;
-   }
+                        // 获取网页正文
+                        var body = doc.querySelector("body").innerText;
 
-   // If the input is a URL, fetch the content from the web page
-   if (isURL) {
-     fetch(text)
-     .then(response => response.text())
-     .then(html => {
-       // Parse the HTML and extract the main content
-       var parser = new DOMParser();
-       var doc = parser.parseFromString(html, "text/html");
-       var content = doc.querySelector("main") || doc.querySelector("article") || doc.body;
-       // Convert the content to plain text
-       text = content.innerText;
-       // Call the summarize function again with the plain text
-       summarizeText(text, language);
-     })
-     .catch(error => {
-       // Handle any errors
-       alert("无法从链接获取内容 Cannot get content from the link");
-       console.error(error);
-     });
-   } else {
-     // If the input is not a URL, call the summarize function with the text
-     summarizeText(text, language);
-   }
- }
+                        // 调用extract函数提取正文中的关键词和句子
+                        var summary = extract(body);
 
- // A function to summarize a given text in a given language
- function summarizeText(text, language) {
+                        // 显示摘要结果
+                        showSummary(title, summary);
+                    })
+                    .catch(error => { // 处理错误
+                        alert("无法获取网页内容 Cannot get the web page content");
+                        console.log(error);
+                    });
+            } else {
+                // 输入为原始文本，直接调用extract函数提取关键词和句子
+                var summary = extract(input);
 
-   // Define some constants for the algorithm
-   var SENTENCE_DELIMITER = (language == "zh") ? "。" : "."; // The character that separates sentences
-   var WORD_DELIMITER = (language == "zh") ? "" : " "; // The character that separates words
-   var SUMMARY_LENGTH = 0.2; // The fraction of sentences to keep in the summary
-   var KEYWORD_LENGTH = 0.05; // The fraction of words to keep as keywords
+                // 显示摘要结果
+                showSummary("原始文本 Original Text", summary);
+            }
+        }
 
-   // Split the text into sentences and words
-   var sentences = text.split(SENTENCE_DELIMITER).filter(s => s != "");
-   var words = text.split(WORD_DELIMITER).filter(w => w != "");
+        // 定义一个函数用于提取关键词和句子
+        function extract(text) {
+            // 定义一个对象用于存储摘要结果
+            var summary = {
+                keywords: [], // 关键词数组
+                sentences: [] // 句子数组
+            };
 
-   // Calculate the total number of sentences and words
-   var totalSentences = sentences.length;
-   var totalWords = words.length;
+            // 定义一个正则表达式用于匹配中文和英文单词
+            var wordRegex = /[\u4e00-\u9fa5a-zA-Z]+/g;
 
-   // Calculate the frequency of each word in the text
-   var wordFrequency = {};
-   for (var word of words) {
-     wordFrequency[word] = (wordFrequency[word] || 0) + 1;
-   }
+            // 定义一个正则表达式用于匹配中文和英文句子
+            var sentenceRegex = /[\u4e00-\u9fa5a-zA-Z0-9,.?!，。？！]+/g;
 
-   // Calculate the score of each sentence based on the word frequency
-   var sentenceScore = {};
-   for (var i = 0; i < totalSentences; i++) {
-     var sentence = sentences[i];
-     var score = 0;
-     for (var word of sentence.split(WORD_DELIMITER)) {
-       score += wordFrequency[word] || 0;
-     }
-     sentenceScore[i] = score;
-   }
+            // 定义一个对象用于存储单词的出现次数
+            var wordCount = {};
 
-   // Sort the sentences by their score in descending order
-   var sortedSentences = Object.keys(sentenceScore).sort((a, b) => sentenceScore[b] - sentenceScore[a]);
+            // 定义一个变量用于存储总的单词数
+            var totalWords = 0;
 
-   // Select the top sentences for the summary based on the summary length
-   var summarySentences = sortedSentences.slice(0, Math.ceil(totalSentences * SUMMARY_LENGTH));
+            // 使用正则表达式匹配所有的单词
+            var words = text.match(wordRegex);
 
-   // Sort the summary sentences by their original order in the text
-   summarySentences.sort((a, b) => a - b);
+            // 遍历所有的单词
+            for (var word of words) {
+                // 将单词转换为小写
+                word = word.toLowerCase();
 
-   // Join the summary sentences with the sentence delimiter
-   var summary = summarySentences.map(i => sentences[i]).join(SENTENCE_DELIMITER + WORD_DELIMITER);
+                // 如果单词已经在对象中，增加其出现次数
+                if (word in wordCount) {
+                    wordCount[word]++;
+                } else {
+                    // 否则，将单词添加到对象中，初始化其出现次数为1
+                    wordCount[word] = 1;
+                }
 
-   // Calculate the score of the summary based on the ratio of kept sentences
-   var summaryScore = (summarySentences.length / totalSentences).toFixed(2);
+                // 增加总的单词数
+                totalWords++;
+            }
 
-   // Sort the words by their frequency in descending order
-   var sortedWords = Object.keys(wordFrequency).sort((a, b) => wordFrequency[b] - wordFrequency[a]);
+            // 定义一个数组用于存储按照出现次数排序的单词
+            var sortedWords = [];
 
-   // Select the top words for the keywords based on the keyword length
-   var keywords = sortedWords.slice(0, Math.ceil(totalWords * KEYWORD_LENGTH));
+            // 遍历对象中的所有键值对
+            for (var [word, count] of Object.entries(wordCount)) {
+                // 将键值对作为一个数组添加到排序数组中
+                sortedWords.push([word, count]);
+            }
 
-   // Join the keywords with commas
-   var keywordList = keywords.join(", ");
+            // 使用sort函数对排序数组进行降序排序，根据出现次数比较大小
+            sortedWords.sort((a, b) => b[1] - a[1]);
 
-   // Generate some references based on the language and the text length
-   var references = "";
-   
-    if (language == "zh") {
-      references += "参考文献：\n";
-      if (totalWords > 1000) {
-        references += "- 张华，文本摘要技术综述，计算机应用研究，2010，27(11)：3881-3885\n";
-        references += "- 刘群，李素建，自动文摘与评测技术，北京：科学出版社，2008\n";
-        references += "- 王斌，基于深度学习的文本摘要研究与实现，北京交通大学硕士学位论文，2019\n";
-      } else {
-        references += "-- 李军，基于神经网络的文本摘要生成方法，计算机工程与应用，2018，54(2)：1-6\n";
-        references += "- 赵婷婷，基于TextRank算法的文本摘要生成系统设计与实现，西安电子科技大学本科学位论文，2017\n";
-      }
-    } else if (language == "en") {
-      references += "References:\n";
-      if (totalWords > 1000) {
-        references += "- Radev, D., Jing, H., Styś, M., & Tam, D. (2004). Centroid-based summarization of multiple documents. Information Processing & Management, 40(6), 919-938.\n";
-        references += "- Nenkova, A., & McKeown, K. (2011). Automatic summarization. Foundations and Trends® in Information Retrieval, 5(2–3), 103-233.\n";
-        references += "- Liu, Y., Lapata, M., Luan, H., & Ji, S. (2019). Text summarization with pretrained encoders. arXiv preprint arXiv:1908.08345.\n";
-      } else {
-        references += "- Luhn, H. P. (1958). The automatic creation of literature abstracts. IBM Journal of research and development, 2(2), 159-165.\n";
-        references += "- Mihalcea, R., & Tarau, P. (2004). TextRank: Bringing order into text. In Proceedings of the 2004 conference on empirical methods in natural language processing (pp. 404-411).\n";
-        references += "- Rush, A. M., Chopra, S., & Weston, J. (2015). A neural attention model for abstractive sentence summarization. arXiv preprint arXiv:1509.00685.\n";
-      }
-    }
+            // 定义一个变量用于存储关键词的个数，根据总的单词数确定，最多为10个
+            var keywordNum = Math.min(Math.floor(totalWords / 10), 10);
 
-    // Display the summary, score, keywords and references in the HTML elements
-    document.getElementById("summary").innerText = summary;
-    document.getElementById("score").innerText = "摘要评分 Summary Score: " + summaryScore;
-    document.getElementById("keywords").innerText = "关键词 Keywords: " + keywordList;
-    document.getElementById("references").innerText = references;
-  }
-</script>
+            // 遍历排序数组中的前keywordNum个元素，将其添加到摘要结果的关键词数组中
+            for (var i = 0; i < keywordNum; i++) {
+                summary.keywords.push(sortedWords[i][0]);
+            }
+
+            // 使用正则表达式匹配所有的句子
+            var sentences = text.match(sentenceRegex);
+
+            // 定义一个变量用于存储句子的得分阈值，根据总的单词数确定，最小为2，最大为5
+            var threshold = Math.max(Math.min(Math.floor(totalWords / 100), 5), 2);
+
+            // 遍历所有的句子
+            for (var sentence of sentences) {
+                // 定义一个变量用于存储句子的得分，初始为0
+                var score = 0;
+
+                // 使用正则表达式匹配句子中的所有单词
+                var sentenceWords = sentence.match(wordRegex);
+
+                // 遍历句子中的所有单词
+                for (var sentenceWord of sentenceWords) {
+                    // 将单词转换为小写
+                    sentenceWord = sentenceWord.toLowerCase();
+
+                    // 如果单词在摘要结果的关键词数组中，增加句子的得分
+                    if (summary.keywords.includes(sentenceWord)) {
+                        score++;
+                    }
+                }
+
+                // 如果句子的得分大于或等于阈值，将句子添加到摘要结果的句子数组中
+                if (score >= threshold) {
+                    summary.sentences.push(sentence);
+                }
+            }
+
+            // 返回摘要结果
+            return summary;
+        }
+
+        // 定义一个函数用于显示摘要结果
+        function showSummary(title, summary) {
+            // 获取输出框的元素
+            var output = document.getElementById("output");
+
+            // 清空输出框的内容
+            output.innerHTML = "";
+
+            // 创建一个标题元素，设置其内容为标题参数
+            var titleElement = document.createElement("h3");
+            titleElement.innerText = title;
+
+            // 创建一个关键词元素，设置其内容为关键词数组的字符串形式，用逗号分隔
+            var keywordElement = document.createElement("p");
+            keywordElement.innerText = "关键词 Keywords: " + summary.keywords.join(", ");
+
+            // 创建一个句子元素，设置其内容为句子数组的字符串形式，用换行符分隔
+            var sentenceElement = document.createElement("p");
+            sentenceElement.innerText = "摘要 Summary: \n" + summary.sentences.join("\n");
+
+            // 将标题元素，关键词元素和句子元素依次添加到输出框中
+            output.appendChild(titleElement);
+            output.appendChild(keywordElement);
+            output.appendChild(sentenceElement);
+
+            // 显示输出框
+            output.hidden = false;
+        }
+    </script>
 </body>
 </html>
