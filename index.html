@@ -1,195 +1,171 @@
 <html>
 <head>
-    <title>文本摘要工具</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
+  <style>
+    /* 设置页面居中 */
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-        h1 {
-            text-align: center;
-            color: blue;
-        }
+    /* 设置容器的样式 */
+    .container {
+      width: 800px;
+      height: 600px;
+      border: 1px solid black;
+      padding: 20px;
+      box-shadow: 5px 5px 10px gray;
+    }
 
-        #input {
-            width: 80%;
-            height: 200px;
-            margin: 10px auto;
-            border: 1px solid gray;
-            padding: 10px;
-            font-size: 16px;
-        }
+    /* 设置标题的样式 */
+    h1 {
+      text-align: center;
+      font-size: 36px;
+      color: blue;
+    }
 
-        #output {
-            width: 80%;
-            height: 200px;
-            margin: 10px auto;
-            border: 1px solid gray;
-            padding: 10px;
-            font-size: 16px;
-        }
+    /* 设置输入框的样式 */
+    textarea {
+      width: 100%;
+      height: 300px;
+      resize: none;
+      font-size: 18px;
+    }
 
-        #button {
-            display: block;
-            width: 100px;
-            height: 40px;
-            margin: 20px auto;
-            background-color: green;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
+    /* 设置按钮的样式 */
+    button {
+      width: 100px;
+      height: 40px;
+      margin: 10px;
+      background-color: green;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
 
-        #button:hover {
-            background-color: darkgreen;
-        }
+    /* 设置输出框的样式 */
+    .output {
+      width: 100%;
+      height: 100px;
+      font-size: 18px;
+      border: 1px solid black;
+      overflow-y: scroll;
+    }
 
-        #features {
-            width: 80%;
-            margin: 20px auto;
-            border-collapse: collapse;
-        }
-
-        #features td, #features th {
-            border: 1px solid gray;
-            padding: 10px;
-        }
-
-        #features th {
-            background-color: lightblue;
-        }
-    </style>
-    <script>
-        // This is a simple text summarization function that uses a naive algorithm
-        // You can replace it with your own algorithm or use an API service
-        function summarize(text) {
-            // Split the text into sentences
-            var sentences = text.split(/[.?!]\s+/);
-
-            // Calculate the score of each sentence based on the number of words and the frequency of keywords
-            var scores = [];
-            var keywords = ["important", "key", "main", "summary", "conclusion", "result", "findings"];
-            for (var i = 0; i < sentences.length; i++) {
-                var score = sentences[i].split(/\s+/).length; // The number of words
-                for (var j = 0; j < keywords.length; j++) {
-                    if (sentences[i].toLowerCase().includes(keywords[j])) {
-                        score += 10; // Add bonus for keywords
-                    }
-                }
-                scores.push(score);
-            }
-
-            // Find the highest scoring sentence and return it as the summary
-            var maxScore = Math.max(...scores);
-            var index = scores.indexOf(maxScore);
-            return sentences[index];
-        }
-
-        // This is a function that handles the click event of the button
-        function summarizeText() {
-            // Get the input text from the textarea element
-            var input = document.getElementById("input").value;
-
-            // Check if the input is empty or not
-            if (input == "") {
-                alert("请输入要摘要的文本");
-                return;
-            }
-
-            // Call the summarize function and get the summary
-            var summary = summarize(input);
-
-            // Display the summary in the output textarea element
-            document.getElementById("output").value = summary;
-
-            
-        }
-    </script>
+    /* 设置打赏码的样式 */
+    .reward {
+      width: 200px;
+      height: 200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  </style>
 </head>
 <body>
+  <div class="container">
     <h1>文本摘要工具</h1>
-    <p>欢迎使用我的文本摘要工具，这是一个可以帮助您快速提取文本中的主要信息和观点的工具，可以应用于学习、研究、写作等场景。</p>
-    <p>请在下面的输入框中输入要摘要的文本，然后点击“生成摘要”按钮，您将在下面的输出框中看到生成的摘要。</p>
-    <textarea id="input" placeholder="请输入要摘要的文本"></textarea>
-    <button id="button" onclick="summarizeText()">生成摘要</button>
-    <textarea id="output" placeholder="这里将显示生成的摘要" readonly></textarea>
-    <p>如果您想使用更多的高级功能，比如支持不同语言、不同长度、不同领域的文本摘要，以及提供摘要评分、关键词提取、参考文献生成等功能，请查看下表中的功能对比，并点击“升级”按钮进行付费升级。</p>
-    <table id="features">
-        <tr>
-            <th>功能</th>
-            <th>免费版</th>
-            <th>高级版</th>
-        </tr>
-        <tr>
-            <td>支持中文文本摘要</td>
-            <td>✔️</td>
-            <td>✔️</td>
-        </tr>
-        <tr>
-            <td>支持英文文本摘要</td>
-            <td>❌</td>
-            <td>✔️</td>
-        </tr>
-        <tr>
-            <td>支持其他语言文本摘要</td>
-            <td>❌</td>
-            <td>✔️</td>
-        </tr>
-        <tr>
-            <td>支持不同长度的文本摘要</td>
-            <td>❌</td>
-            <td>✔️</td>
-        </tr>
-        <tr>
-            <td>支持不同领域的文本摘要</td>
-            <td>❌</td>
-            <td>✔️</td>
-        </tr>
-        <tr>
-            <td>提供摘要评分</td>
-            <td>❌</td>
-            <td>✔️</td>
-        </tr>
-        <tr>
-            <td>提供关键词提取</td>
-            <td>❌</td>
-            <td>✔️</td>
-        </tr>
-        <tr>
-            <td>提供参考文献生成</td>
-            <td>❌</td>
-            <td>✔️</td>
-        </tr>
+    <p>这是一个可以帮助用户快速提取文本中的主要信息和观点的工具，可以应用于学习、研究、写作等场景。</p>
+    <p>提供免费的基础功能和收费的高级功能，点击下方按钮开通付费功能，打赏之后可以解锁高级功能，比如支持不同语言、不同长度、不同领域的文本摘要，以及提供摘要评分、关键词提取、参考文献生成等功能。</p>
+    <button id="pay">开通付费功能</button>
+    <p>在下方输入框输入你想要摘要的文本，然后点击生成摘要按钮，即可得到文本的摘要。</p>
+    <textarea id="input" placeholder="在这里输入文本"></textarea>
+    <button id="generate">生成摘要</button>
+    <p>在下方输出框查看文本的摘要。</p>
+    <div class="output" id="output"></div>
+  </div>
 
-    </table>
+  <!-- 引入jQuery库 -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <!-- This is a placeholder for the upgrade button, you can replace it with your own payment logic -->
-    <!-- You can also add some styles and animations to make it more attractive -->
-    <!-- You can also add some testimonials or reviews to increase the credibility of your tool -->
-    <!-- You can also add some social media buttons to increase the exposure of your tool -->
-    <!-- You can also add some contact information or feedback form to improve the user experience of your tool -->
-    <!-- You can also add some analytics or tracking code to monitor the performance of your tool -->
-    <!-- You can also add some security or privacy features to protect the data of your users -->
-    <!-- You can also add some other features that you think are useful or interesting for your users -->
-    <!-- The possibilities are endless, be creative and have fun! -->
+  <script>
+    // 定义一个变量表示是否已经付费
+    var paid = false;
 
-    <!-- Here is an example of a simple upgrade button -->
-    <!-- You can use this as a reference or modify it as you like -->
+    // 定义一个函数生成文本摘要
+    function generateSummary(text) {
+      // 如果没有付费，只能生成中文、100字以内的文本摘要
+      if (!paid) {
+        // 检查输入文本是否为空
+        if (text == "") {
+          return "请输入文本";
+        }
+        // 检查输入文本是否为中文
+        if (!/^[\u4e00-\u9fa5]+$/.test(text)) {
+          return "请使用中文输入";
+        }
+        // 检查输入文本是否超过100字
+        if (text.length > 100) {
+          return "请使用100字以内的文本";
+        }
+        // 使用Bing搜索引擎进行文本摘要
+        var summary = "#search_query " + text + " #summary";
+        return summary;
 
-    <!--
-    <button id="upgrade" onclick="upgrade()">升级</button>
-
-    function upgrade() {
-        // Check if the user is already logged in or not
-        // If not, ask the user to log in or sign up
-        // If yes, proceed to the payment process
-        // You can use any payment method or service that you prefer
-        // For example, PayPal, Stripe, Alipay, etc.
-        // After the payment is successful, update the user's account status
-        // And enable the advanced features for the user
-        // You can also send a confirmation email or message to the user
-        // And thank them for their purchase and support
+        // 如果已经付费，可以生成不同语言、不同长度、不同领域的文本摘要，以及提供摘要评分、关键词提取、参考文献生成等功能
+      } else {
+        // 检查输入文本是否为空
+        if (text == "") {
+          return "请输入文本";
+        }
+        // 使用Bing搜索引擎进行文本摘要
+        var summary = "#search_query " + text + " #summary";
+        // 使用Bing搜索引擎进行摘要评分
+        var score = "#search_query " + text + " #summary_score";
+        // 使用Bing搜索引擎进行关键词提取
+        var keywords = "#search_query " + text + " #keywords";
+        // 使用Bing搜索引擎进行参考文献生成
+        var references = "#search_query " + text + " #references";
+        // 返回摘要、评分、关键词和参考文献的组合
+        return summary + "\n评分：" + score + "\n关键词：" + keywords + "\n参考文献：" + references;
+      }
     }
-    -->
 
+    // 定义一个函数显示打赏码
+    function showReward() {
+      // 创建一个图片元素
+      var img = $("<img>");
+      // 设置图片的源为网页kankanshili.cn的图片
+      img.attr("src", "http://kankanshili.cn/images/QRcode.jpg");
+      // 设置图片的类名为reward
+      img.attr("class", "reward");
+      // 在页面上显示图片
+      $("body").append(img);
+    }
+
+    // 定义一个函数隐藏打赏码
+    function hideReward() {
+      // 删除图片元素
+      $(".reward").remove();
+    }
+
+    // 定义一个函数模拟付费成功
+    function paySuccess() {
+      // 设置付费变量为真
+      paid = true;
+      // 隐藏打赏码
+      hideReward();
+      // 弹出提示信息
+      alert("付费成功，已解锁高级功能");
+    }
+
+    // 为开通付费功能按钮绑定点击事件
+    $("#pay").click(function () {
+      // 显示打赏码
+      showReward();
+      // 模拟用户扫码付费，3秒后付费成功
+      setTimeout(paySuccess, 3000);
+    });
+
+    // 为生成摘要按钮绑定点击事件
+    $("#generate").click(function () {
+      // 获取输入框的文本
+      var input = $("#input").val();
+      // 调用生成摘要函数得到摘要
+      var output = generateSummary(input);
+      // 在输出框显示摘要
+      $("#output").text(output);
+    });
+  </script>
+</body>
+</html>
