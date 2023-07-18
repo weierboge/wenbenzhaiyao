@@ -1,255 +1,303 @@
 <html>
 <head>
     <style>
-        /* 设置页面背景颜色为浅灰色 */
+        /* 使用极简设计风格，不用纯黑白，突出科技感 */
         body {
             background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
         }
 
-        /* 设置标题样式 */
         h1 {
-            font-family: Arial, Helvetica, sans-serif;
-            font-size: 36px;
             color: #333333;
             text-align: center;
-            margin-top: 50px;
+            font-size: 36px;
         }
 
-        /* 设置副标题样式 */
-        h2 {
-            font-family: Arial, Helvetica, sans-serif;
-            font-size: 24px;
+        p {
             color: #666666;
             text-align: center;
-            margin-top: 20px;
+            font-size: 18px;
         }
 
-        /* 设置文本框样式 */
-        textarea {
-            width: 600px;
+        /* 按钮和文本框之间留出一定距离，所有元素垂直和水平都居中 */
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 20px;
+        }
+
+        .input {
+            width: 80%;
             height: 200px;
-            border: 2px solid #cccccc;
+            border: 1px solid #cccccc;
             border-radius: 10px;
             padding: 10px;
-            font-family: Arial, Helvetica, sans-serif;
             font-size: 16px;
-            color: #333333;
             resize: none;
         }
 
-        /* 设置按钮样式 */
-        button {
+        .button {
             width: 100px;
             height: 40px;
             border: none;
             border-radius: 10px;
             background-color: #3399ff;
             color: white;
-            font-family: Arial, Helvetica, sans-serif;
             font-size: 16px;
+            margin-top: 10px;
         }
 
-        /* 设置摘要框样式 */
-        div {
-            width: 600px;
-            height: auto;
-            border: 2px solid #cccccc;
+        .output {
+            width: 80%;
+            height: 200px;
+            border: 1px solid #cccccc;
             border-radius: 10px;
             padding: 10px;
-            font-family: Arial, Helvetica, sans-serif;
             font-size: 16px;
-            color: #333333;
-        }
-
-        /* 设置居中布局 */
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
         }
     </style>
 </head>
 <body>
     <h1>文本摘要工具 Text Summarizer</h1>
-    <h2>快速提取文本中的主要信息和观点 Quickly extract the main information and opinions from the text</h2>
+    <p>这是一个可以帮助用户快速提取文本中的主要信息和观点的工具，可以应用于学习、研究、写作等场景。 This is a tool that can help users quickly extract the main information and opinions from the text, which can be applied to learning, research, writing and other scenarios.</p>
     <div class="container">
-        <!-- 创建一个文本框用于输入原始文本 -->
-        <textarea id="input" placeholder="请输入原始文本或粘贴网页链接 Please enter the original text or paste the web page link"></textarea>
-        <!-- 创建一个按钮用于触发摘要生成 -->
-        <button id="summarize" onclick="summarize()">生成摘要 Summarize</button>
-        <!-- 创建一个摘要框用于显示摘要结果 -->
-        <div id="output" hidden></div>
+        <textarea class="input" placeholder="请输入要摘要的文本或者URL Please enter the text or URL to summarize"></textarea>
+        <button class="button" onclick="summarize()">摘要 Summarize</button>
+        <div class="output"></div>
     </div>
-
     <script>
-        // 定义一个函数用于生成摘要
-        function summarize() {
-            // 获取输入框的值
-            var input = document.getElementById("input").value;
+        // 获取页面元素
+        const input = document.querySelector(".input");
+        const output = document.querySelector(".output");
 
-            // 判断输入是否为空
-            if (input == "") {
-                alert("请输入原始文本或粘贴网页链接 Please enter the original text or paste the web page link");
-                return; // 结束函数
-            }
+        // 定义一些常量
+        const MAX_LENGTH = 300; // 摘要的最大长度
+        const CHINESE = /[\u4e00-\u9fa5]/; // 中文字符的正则表达式
+        const ENGLISH = /[a-zA-Z]/; // 英文字符的正则表达式
+        const STOPWORDS = ["the", "a", "an", "of", "in", "on", "to", "for", "and", "or", "but", "so", "yet", "however", "therefore"]; // 英文停用词列表
 
-            // 判断输入是否为网页链接
-            if (input.startsWith("http")) {
-                // 使用fetch函数获取网页内容
-                fetch(input)
-                    .then(response => response.text()) // 将响应转换为文本
-                    .then(html => { // 处理文本
-                        // 使用DOMParser对象解析HTML文本
-                        var parser = new DOMParser();
-                        var doc = parser.parseFromString(html, "text/html");
-
-                        // 获取网页标题
-                        var title = doc.querySelector("title").innerText;
-
-                        // 获取网页正文
-                        var body = doc.querySelector("body").innerText;
-
-                        // 调用extract函数提取正文中的关键词和句子
-                        var summary = extract(body);
-
-                        // 显示摘要结果
-                        showSummary(title, summary);
-                    })
-                    .catch(error => { // 处理错误
-                        alert("无法获取网页内容 Cannot get the web page content");
-                        console.log(error);
-                    });
-            } else {
-                // 输入为原始文本，直接调用extract函数提取关键词和句子
-                var summary = extract(input);
-
-                // 显示摘要结果
-                showSummary("原始文本 Original Text", summary);
+        // 定义一个函数来判断输入是否是URL
+        function isURL(input) {
+            try {
+                new URL(input);
+                return true;
+            } catch (error) {
+                return false;
             }
         }
 
-        // 定义一个函数用于提取关键词和句子
-        function extract(text) {
-            // 定义一个对象用于存储摘要结果
-            var summary = {
-                keywords: [], // 关键词数组
-                sentences: [] // 句子数组
-            };
-
-            // 定义一个正则表达式用于匹配中文和英文单词
-            var wordRegex = /[\u4e00-\u9fa5a-zA-Z]+/g;
-
-            // 定义一个正则表达式用于匹配中文和英文句子
-            var sentenceRegex = /[\u4e00-\u9fa5a-zA-Z0-9,.?!，。？！]+/g;
-
-            // 定义一个对象用于存储单词的出现次数
-            var wordCount = {};
-
-            // 定义一个变量用于存储总的单词数
-            var totalWords = 0;
-
-            // 使用正则表达式匹配所有的单词
-            var words = text.match(wordRegex);
-
-            // 遍历所有的单词
-            for (var word of words) {
-                // 将单词转换为小写
-                word = word.toLowerCase();
-
-                // 如果单词已经在对象中，增加其出现次数
-                if (word in wordCount) {
-                    wordCount[word]++;
+        // 定义一个函数来获取URL的内容
+        async function fetchURL(url) {
+            try {
+                // 使用fetch API来发送请求
+                const response = await fetch(url);
+                // 判断响应的类型，如果是文本，就直接返回文本，如果是二进制，就转换成文本
+                const contentType = response.headers.get("content-type");
+                if (contentType.includes("text")) {
+                    return await response.text();
+                } else if (contentType.includes("binary")) {
+                    // 使用TextDecoder API来解码二进制数据
+                    const data = await response.arrayBuffer();
+                    const decoder = new TextDecoder();
+                    return decoder.decode(data);
                 } else {
-                    // 否则，将单词添加到对象中，初始化其出现次数为1
-                    wordCount[word] = 1;
+                    return "无法获取URL的内容 Cannot get the content of the URL";
                 }
-
-                // 增加总的单词数
-                totalWords++;
+            } catch (error) {
+                return "无法获取URL的内容 Cannot get the content of the URL";
             }
+        }
 
-            // 定义一个数组用于存储按照出现次数排序的单词
-            var sortedWords = [];
-
-            // 遍历对象中的所有键值对
-            for (var [word, count] of Object.entries(wordCount)) {
-                // 将键值对作为一个数组添加到排序数组中
-                sortedWords.push([word, count]);
+        // 定义一个函数来判断文本的语言
+        function detectLanguage(text) {
+            // 如果文本中有中文字符，就认为是中文，否则认为是英文
+            if (CHINESE.test(text)) {
+                return "Chinese";
+            } else {
+                return "English";
             }
+        }
 
-            // 使用sort函数对排序数组进行降序排序，根据出现次数比较大小
-            sortedWords.sort((a, b) => b[1] - a[1]);
-
-            // 定义一个变量用于存储关键词的个数，根据总的单词数确定，最多为10个
-            var keywordNum = Math.min(Math.floor(totalWords / 10), 10);
-
-            // 遍历排序数组中的前keywordNum个元素，将其添加到摘要结果的关键词数组中
-            for (var i = 0; i < keywordNum; i++) {
-                summary.keywords.push(sortedWords[i][0]);
-            }
-
-            // 使用正则表达式匹配所有的句子
-            var sentences = text.match(sentenceRegex);
-
-            // 定义一个变量用于存储句子的得分阈值，根据总的单词数确定，最小为2，最大为5
-            var threshold = Math.max(Math.min(Math.floor(totalWords / 100), 5), 2);
-
-            // 遍历所有的句子
-            for (var sentence of sentences) {
-                // 定义一个变量用于存储句子的得分，初始为0
-                var score = 0;
-
-                // 使用正则表达式匹配句子中的所有单词
-                var sentenceWords = sentence.match(wordRegex);
-
-                // 遍历句子中的所有单词
-                for (var sentenceWord of sentenceWords) {
-                    // 将单词转换为小写
-                    sentenceWord = sentenceWord.toLowerCase();
-
-                    // 如果单词在摘要结果的关键词数组中，增加句子的得分
-                    if (summary.keywords.includes(sentenceWord)) {
-                        score++;
+        // 定义一个函数来进行中文分词
+        function segmentChinese(text) {
+            // 使用最大匹配法来进行分词，假设最大词长为4
+            const MAX_WORD_LENGTH = 4;
+            // 定义一个词典，可以从外部文件或者数据库中加载
+            const DICTIONARY = ["中国", "人民", "共和国", "国家", "主席", "习近平", "访问", "美国", "总统", "奥巴马"];
+            // 定义一个空数组来存储分词结果
+            const words = [];
+            // 从左到右扫描文本
+            let i = 0;
+            while (i < text.length) {
+                // 从最大词长开始匹配
+                let matched = false;
+                for (let j = MAX_WORD_LENGTH; j > 0; j--) {
+                    // 获取当前的候选词
+                    let word = text.slice(i, i + j);
+                    // 如果候选词在词典中，就认为匹配成功，加入分词结果，并更新索引
+                    if (DICTIONARY.includes(word)) {
+                        words.push(word);
+                        i += j;
+                        matched = true;
+                        break;
                     }
                 }
-
-                // 如果句子的得分大于或等于阈值，将句子添加到摘要结果的句子数组中
-                if (score >= threshold) {
-                    summary.sentences.push(sentence);
+                // 如果没有匹配成功，就把当前字符作为一个单字词，加入分词结果，并更新索引
+                if (!matched) {
+                    words.push(text[i]);
+                    i++;
                 }
             }
-
-            // 返回摘要结果
-            return summary;
+            // 返回分词结果
+            return words;
         }
 
-        // 定义一个函数用于显示摘要结果
-        function showSummary(title, summary) {
-            // 获取输出框的元素
-            var output = document.getElementById("output");
+        // 定义一个函数来进行英文分词
+        function segmentEnglish(text) {
+            // 使用空格和标点符号来进行分词，并转换成小写，过滤掉停用词和空字符串
+            const words = text.split(/[\s,.?!:;'"()]+/).map(word => word.toLowerCase()).filter(word => !STOPWORDS.includes(word) && word !== "");
+            // 返回分词结果
+            return words;
+        }
 
-            // 清空输出框的内容
-            output.innerHTML = "";
+        // 定义一个函数来计算词频
+        function countFrequency(words) {
+            // 定义一个空对象来存储词频
+            const frequency = {};
+            // 遍历分词结果，统计每个词出现的次数，并更新对象
+            for (let word of words) {
+                if (frequency[word]) {
+                    frequency[word]++;
+                } else {
+                    frequency[word] = 1;
+                }
+            }
+            // 返回词频对象
+            return frequency;
+        }
 
-            // 创建一个标题元素，设置其内容为标题参数
-            var titleElement = document.createElement("h3");
-            titleElement.innerText = title;
+        // 定义一个函数来计算逆文档频率
+        function calculateIDF(words, documents) {
+            // 定义一个空对象来存储逆文档频率
+            const idf = {};
+            // 遍历分词结果，对于每个词，计算包含它的文档数，并更新对象
+            for (let word of words) {
+                let count = 0;
+                for (let document of documents) {
+                    if (document.includes(word)) {
+                        count++;
+                    }
+                }
+                idf[word] = Math.log(documents.length / (count + 1));
+            }
+            // 返回逆文档频率对象
+            return idf;
+        }
 
-            // 创建一个关键词元素，设置其内容为关键词数组的字符串形式，用逗号分隔
-            var keywordElement = document.createElement("p");
-            keywordElement.innerText = "关键词 Keywords: " + summary.keywords.join(", ");
+        // 定义一个函数来计算词的重要性
+        function calculateImportance(words, frequency, idf) {
+            // 定义一个空对象来存储词的重要性
+            const importance = {};
+            // 遍历分词结果，对于每个词，计算它的重要性，即词频乘以逆文档频率，并更新对象
+            for (let word of words) {
+                importance[word] = frequency[word] * idf[word];
+            }
+            // 返回词的重要性对象
+            return importance;
+        }
 
-            // 创建一个句子元素，设置其内容为句子数组的字符串形式，用换行符分隔
-            var sentenceElement = document.createElement("p");
-            sentenceElement.innerText = "摘要 Summary: \n" + summary.sentences.join("\n");
+        // 定义一个函数来生成中文摘要
+        function summarizeChinese(text) {
+            // 使用换行符来分割文本成段落
+            const paragraphs = text.split("\n");
+            // 对每个段落进行分词，并计算词频
+            const words = paragraphs.map(paragraph => segmentChinese(paragraph));
+            const frequency = paragraphs.map(paragraph => countFrequency(paragraph));
+            // 计算逆文档频率和词的重要性
+            const idf = calculateIDF(words.flat(), words);
+            const importance = paragraphs.map(paragraph => calculateImportance(paragraph, frequency, idf));
+            // 定义一个空数组来存储摘要结果
+            const summary = [];
+            // 遍历每个段落，对于每个段落，找出最重要的词，并把它加入摘要结果，直到达到最大长度或者没有更多词为止
+            for (let i = 0; i < paragraphs.length; i++) {
+                let paragraph = paragraphs[i];
+                let paragraphImportance = importance[i];
+                // 对重要性对象按照值降序排序，并获取排序后的键（即词）
+                let sortedWords = Object.keys(paragraphImportance).sort((a, b) => paragraphImportance[b] - paragraphImportance[a]);
+                // 遍历排序后的词，把它加入摘要结果，并从段落中删除，直到达到最大长度或者没有更多词为止
+                for (let word of sortedWords) {
+                    if (summary.length < MAX_LENGTH) {
+                        summary.push(word);
+                        paragraph = paragraph.replace(word, "");
+                    } else {
+                        break;
+                    }
+                }
+                // 如果段落还有剩余的内容，就把它加入摘要结果，直到达到最大长度或者没有更多内容为止
+                if (paragraph.length > 0) {
+                    for (let char of paragraph) {
+                        if (summary.length < MAX_LENGTH) {
+                            summary.push(char);
+                        } else {
+                            break;
+                        }
+                    }
+                }
+            }
+            // 返回摘要结果，用空字符串连接
+            return summary.join("");
+        }
 
-            // 将标题元素，关键词元素和句子元素依次添加到输出框中
-            output.appendChild(titleElement);
-            output.appendChild(keywordElement);
-            output.appendChild(sentenceElement);
+        // 定义一个函数来生成英文摘要
+        function summarizeEnglish(text) {
+            // 使用换行符和句号来分割文本成句子
+            const sentences = text.split(/[\n.]+/);
+            // 对每个句子进行分词，并计算词频
+            const words = sentences.map(sentence => segmentEnglish(sentence));
+            const frequency = sentences.map(sentence => countFrequency(sentence));
+            // 计算逆文档频率和词的重要性
+            const idf = calculateIDF(words.flat(), words);
+            const importance = sentences.map(sentence => calculateImportance(sentence, frequency, idf));
+            // 定义一个空数组来存储摘要结果
+            const summary = [];
+            // 遍历每个句子，对于每个句子，计算它的总重要性，即所有词的重要性之和，并把它和句子本身作为一个元组加入摘要结果
+            for (let i = 0; i < sentences.length; i++) {
+                let sentence = sentences[i];
+                let sentenceImportance = importance[i];
+                let totalImportance = Object.values(sentenceImportance).reduce((a, b) => a + b, 0);
+                summary.push([totalImportance, sentence]);
+            }
+            // 对摘要结果按照总重要性降序排序，并获取排序后的句子
+            let sortedSentences = summary.sort((a, b) => b[0] - a[0]).map(item => item[1]);
+            // 返回摘要结果，用句号连接
+            return sortedSentences.join(". ");
+        }
 
-            // 显示输出框
-            output.hidden = false;
+        // 定义一个函数来生成摘要
+        async function summarize() {
+            // 获取输入的内容
+            let inputText = input.value;
+            // 判断输入是否为空，如果为空，就提示用户输入内容
+            if (inputText === "") {
+                output.textContent = "请输入要摘要的文本或者URL Please enter the text or URL to summarize";
+                return;
+            }
+            // 判断输入是否是URL，如果是URL，就获取URL的内容
+            if (isURL(inputText)) {
+                inputText = await fetchURL(inputText);
+            }
+            // 判断文本的语言，如果是中文，就生成中文摘要，如果是英文，就生成英文摘要
+            let language = detectLanguage(inputText);
+            let summary;
+            if (language === "Chinese") {
+                summary = summarizeChinese(inputText);
+            } else {
+                summary = summarizeEnglish(inputText);
+            }
+            // 显示摘要结果
+            output.textContent = summary;
         }
     </script>
 </body>
