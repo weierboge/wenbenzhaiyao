@@ -91,8 +91,8 @@
 <body>
     <div class="container">
         <h1>Text Summarizer 文本摘要工具</h1>
-        <p>Enter your text here 输入你的文本</p>
-        <textarea id="input" placeholder="Paste or type your text here 粘贴或输入你的文本"></textarea>
+        <p>Enter your text or URL here 输入你的文本或网址</p>
+        <textarea id="input" placeholder="Paste or type your text or URL here 粘贴或输入你的文本或网址"></textarea>
         <button id="button">Generate Summary 生成摘要</button>
         <div class="result" id="result">
             <!-- The summary, score, keywords and references will be displayed here 摘要，评分，关键词和参考文献将在这里显示 -->
@@ -102,6 +102,12 @@
         // This is a mock-up script to simulate the text summarization process 这是一个模拟脚本，用于模拟文本摘要的过程
         // You can replace it with your own logic and algorithm 你可以用你自己的逻辑和算法替换它
 
+        // Import the jieba library for Chinese word segmentation 导入jieba库用于中文分词
+        var jieba = require("jieba");
+
+        // Import the boilerpipe library for web page summarization 导入boilerpipe库用于网页摘要
+        var boilerpipe = require("boilerpipe");
+
         // Get the elements from the document 从文档中获取元素
         var input = document.getElementById("input");
         var button = document.getElementById("button");
@@ -109,37 +115,73 @@
 
         // Add a click event listener to the button 给按钮添加一个点击事件监听器
         button.addEventListener("click", function() {
-            // Get the input text 获取输入的文本
+            
+             // Get the input text or URL 获取输入的文本或网址
             var text = input.value;
 
             // Check if the input is empty 检查输入是否为空
             if (text.trim() === "") {
                 // Alert the user 提示用户
-                alert("Please enter some text 请输入一些文本");
+                alert("Please enter some text or URL 请输入一些文本或网址");
                 // Clear the result 清空结果
                 result.innerHTML = "";
                 // Return early 提前返回
                 return;
             }
 
-            // Simulate the text summarization process 模拟文本摘要的过程
-            // Generate a summary, a score, some keywords and some references 生成一个摘要，一个评分，一些关键词和一些参考文献
-            var summary = text.slice(0, 100) + "..."; // A simple way to generate a summary is to take the first 100 characters of the text 生成摘要的一个简单方法是取文本的前100个字符
-            var score = Math.floor(Math.random() * 100) + "%"; // A random score between 0 and 100% 一个0到100%之间的随机评分
-            var keywords = text.split(" ").slice(0, 5).join(", "); // A simple way to generate keywords is to take the first 5 words of the text 生成关键词的一个简单方法是取文本的前5个单词
-            var references = "https://www.example.com"; // A dummy reference for demonstration purposes 一个用于演示目的的虚拟参考
+            // Check if the input is a URL 检查输入是否是一个网址
+            if (text.startsWith("http://") || text.startsWith("https://")) {
+                // Use the boilerpipe library to extract the main content from the web page 使用boilerpipe库从网页中提取主要内容
+                boilerpipe.extract(text, function(error, content) {
+                    // Check if there is an error 检查是否有错误
+                    if (error) {
+                        // Alert the user 提示用户
+                        alert("Sorry, something went wrong. Please try again later. 抱歉，出了点问题。请稍后再试。");
+                        // Clear the result 清空结果
+                        result.innerHTML = "";
+                        // Return early 提前返回
+                        return;
+                    }
 
-            // Display the results in the result element 在结果元素中显示结果
-            result.innerHTML = `
-                <h2>Summary 摘要</h2>
-                <p>${summary}</p>
-                <h2>Score 评分</h2>
-                <p>${score}</p>
-                <h2>Keywords 关键词</h2>
-                <p>${keywords}</p>
-                <h2>References 参考文献</h2>
-                <p>${references}</p>
-            `;
+                    // Simulate the text summarization process 模拟文本摘要的过程
+                    // Generate a summary, a score, some keywords and some references 生成一个摘要，一个评分，一些关键词和一些参考文献
+                    var summary = content.slice(0, 100) + "..."; // A simple way to generate a summary is to take the first 100 characters of the content 生成摘要的一个简单方法是取内容的前100个字符
+                    var score = Math.floor(Math.random() * 100) + "%"; // A random score between 0 and 100% 一个0到100%之间的随机评分
+                    var keywords = jieba.extract(content, 5).map(function(item) { return item.word; }).join(", "); // Use the jieba library to extract the top 5 keywords from the content 使用jieba库从内容中提取前5个关键词
+                    var references = text; // Use the input URL as the reference 使用输入的网址作为参考
+
+                    // Display the results in the result element 在结果元素中显示结果
+                    result.innerHTML = `
+                        <h2>Summary 摘要</h2>
+                        <p>${summary}</p>
+                        <h2>Score 评分</h2>
+                        <p>${score}</p>
+                        <h2>Keywords 关键词</h2>
+                        <p>${keywords}</p>
+                        <h2>References 参考文献</h2>
+                        <p>${references}</p>
+                    `;
+                });
+            } else {
+                // Simulate the text summarization process 模拟文本摘要的过程
+                // Generate a summary, a score, some keywords and some references 生成一个摘要，一个评分，一些关键词和一些参考文献
+                var summary = text.slice(0, 100) + "..."; // A simple way to generate a summary is to take the first 100 characters of the text 生成摘要的一个简单方法是取文本的前100个字符
+                var score = Math.floor(Math.random() * 100) + "%"; // A random score between 0 and 100% 一个0到100%之间的随机评分
+                var keywords = jieba.extract(text, 5).map(function(item) { return item.word; }).join(", "); // Use the jieba library to extract the top 5 keywords from the text 使用jieba库从文本中提取前5个关键词
+                var references = "https://www.example.com"; // A dummy reference for demonstration purposes 一个用于演示目的的虚拟参考
+
+                // Display the results in the result element 在结果元素中显示结果
+                result.innerHTML = `
+                    <h2>Summary 摘要</h2>
+                    <p>${summary}</p>
+                    <h2>Score 评分</h2>
+                    <p>${score}</p>
+                    <h2>Keywords 关键词</h2>
+                    <p>${keywords}</p>
+                    <h2>References 参考文献</h2>
+                    <p>${references}</p>
+                `;
+            }
         });
     </script>
 </body>
