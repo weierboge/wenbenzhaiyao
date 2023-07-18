@@ -1,0 +1,195 @@
+<html>
+<head>
+    <title>文本摘要工具</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: blue;
+        }
+
+        #input {
+            width: 80%;
+            height: 200px;
+            margin: 10px auto;
+            border: 1px solid gray;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        #output {
+            width: 80%;
+            height: 200px;
+            margin: 10px auto;
+            border: 1px solid gray;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        #button {
+            display: block;
+            width: 100px;
+            height: 40px;
+            margin: 20px auto;
+            background-color: green;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        #button:hover {
+            background-color: darkgreen;
+        }
+
+        #features {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+
+        #features td, #features th {
+            border: 1px solid gray;
+            padding: 10px;
+        }
+
+        #features th {
+            background-color: lightblue;
+        }
+    </style>
+    <script>
+        // This is a simple text summarization function that uses a naive algorithm
+        // You can replace it with your own algorithm or use an API service
+        function summarize(text) {
+            // Split the text into sentences
+            var sentences = text.split(/[.?!]\s+/);
+
+            // Calculate the score of each sentence based on the number of words and the frequency of keywords
+            var scores = [];
+            var keywords = ["important", "key", "main", "summary", "conclusion", "result", "findings"];
+            for (var i = 0; i < sentences.length; i++) {
+                var score = sentences[i].split(/\s+/).length; // The number of words
+                for (var j = 0; j < keywords.length; j++) {
+                    if (sentences[i].toLowerCase().includes(keywords[j])) {
+                        score += 10; // Add bonus for keywords
+                    }
+                }
+                scores.push(score);
+            }
+
+            // Find the highest scoring sentence and return it as the summary
+            var maxScore = Math.max(...scores);
+            var index = scores.indexOf(maxScore);
+            return sentences[index];
+        }
+
+        // This is a function that handles the click event of the button
+        function summarizeText() {
+            // Get the input text from the textarea element
+            var input = document.getElementById("input").value;
+
+            // Check if the input is empty or not
+            if (input == "") {
+                alert("请输入要摘要的文本");
+                return;
+            }
+
+            // Call the summarize function and get the summary
+            var summary = summarize(input);
+
+            // Display the summary in the output textarea element
+            document.getElementById("output").value = summary;
+
+            
+        }
+    </script>
+</head>
+<body>
+    <h1>文本摘要工具</h1>
+    <p>欢迎使用我的文本摘要工具，这是一个可以帮助您快速提取文本中的主要信息和观点的工具，可以应用于学习、研究、写作等场景。</p>
+    <p>请在下面的输入框中输入要摘要的文本，然后点击“生成摘要”按钮，您将在下面的输出框中看到生成的摘要。</p>
+    <textarea id="input" placeholder="请输入要摘要的文本"></textarea>
+    <button id="button" onclick="summarizeText()">生成摘要</button>
+    <textarea id="output" placeholder="这里将显示生成的摘要" readonly></textarea>
+    <p>如果您想使用更多的高级功能，比如支持不同语言、不同长度、不同领域的文本摘要，以及提供摘要评分、关键词提取、参考文献生成等功能，请查看下表中的功能对比，并点击“升级”按钮进行付费升级。</p>
+    <table id="features">
+        <tr>
+            <th>功能</th>
+            <th>免费版</th>
+            <th>高级版</th>
+        </tr>
+        <tr>
+            <td>支持中文文本摘要</td>
+            <td>✔️</td>
+            <td>✔️</td>
+        </tr>
+        <tr>
+            <td>支持英文文本摘要</td>
+            <td>❌</td>
+            <td>✔️</td>
+        </tr>
+        <tr>
+            <td>支持其他语言文本摘要</td>
+            <td>❌</td>
+            <td>✔️</td>
+        </tr>
+        <tr>
+            <td>支持不同长度的文本摘要</td>
+            <td>❌</td>
+            <td>✔️</td>
+        </tr>
+        <tr>
+            <td>支持不同领域的文本摘要</td>
+            <td>❌</td>
+            <td>✔️</td>
+        </tr>
+        <tr>
+            <td>提供摘要评分</td>
+            <td>❌</td>
+            <td>✔️</td>
+        </tr>
+        <tr>
+            <td>提供关键词提取</td>
+            <td>❌</td>
+            <td>✔️</td>
+        </tr>
+        <tr>
+            <td>提供参考文献生成</td>
+            <td>❌</td>
+            <td>✔️</td>
+        </tr>
+
+    </table>
+
+    <!-- This is a placeholder for the upgrade button, you can replace it with your own payment logic -->
+    <!-- You can also add some styles and animations to make it more attractive -->
+    <!-- You can also add some testimonials or reviews to increase the credibility of your tool -->
+    <!-- You can also add some social media buttons to increase the exposure of your tool -->
+    <!-- You can also add some contact information or feedback form to improve the user experience of your tool -->
+    <!-- You can also add some analytics or tracking code to monitor the performance of your tool -->
+    <!-- You can also add some security or privacy features to protect the data of your users -->
+    <!-- You can also add some other features that you think are useful or interesting for your users -->
+    <!-- The possibilities are endless, be creative and have fun! -->
+
+    <!-- Here is an example of a simple upgrade button -->
+    <!-- You can use this as a reference or modify it as you like -->
+
+    <!--
+    <button id="upgrade" onclick="upgrade()">升级</button>
+
+    function upgrade() {
+        // Check if the user is already logged in or not
+        // If not, ask the user to log in or sign up
+        // If yes, proceed to the payment process
+        // You can use any payment method or service that you prefer
+        // For example, PayPal, Stripe, Alipay, etc.
+        // After the payment is successful, update the user's account status
+        // And enable the advanced features for the user
+        // You can also send a confirmation email or message to the user
+        // And thank them for their purchase and support
+    }
+    -->
+
