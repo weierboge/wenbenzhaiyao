@@ -1,60 +1,146 @@
- # 导入所需的库
-import newspaper
-import PyPDF2
-import spacy
-import streamlit as st
+<html>
+<head>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-# 定义一个函数，用于从网页或PDF文件中提取文本
-def extract_text(source):
-    if source.startswith("http"):
-        # 如果是网页，使用newspaper库解析
-        article = newspaper.Article(source)
-        article.download()
-        article.parse()
-        text = article.text
-    else:
-        # 如果是PDF文件，使用PyPDF2库读取
-        pdf_file = open(source, "rb")
-        pdf_reader = PyPDF2.PdfFileReader(pdf_file)
-        num_pages = pdf_reader.numPages
-        text = ""
-        for i in range(num_pages):
-            page = pdf_reader.getPage(i)
-            text += page.extractText()
-    return text
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            background-color: #fff;
+            color: #000;
+        }
 
-# 定义一个函数，用于对文本进行摘要
-def summarize_text(text, ratio=0.2):
-    # 使用spacy库加载预训练的模型
-    nlp = spacy.load("en_core_web_sm")
-    # 创建一个文档对象
-    doc = nlp(text)
-    # 使用textacy库提供的算法生成摘要
-    summary = textacy.summarization.text_summarizer(doc, ratio=ratio)
-    return summary.text
+        .container {
+            width: 80%;
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
 
-# 使用streamlit库创建一个简洁的网页界面
-st.title("文本摘要工具")
-st.write("这是一个可以帮助用户快速提取文本中的主要信息和观点的工具，可以应用于学习、研究、写作等场景。支持不同语言、不同长度、不同领域的文本摘要，以及提供摘要评分、关键词提取、参考文献生成等功能。")
+        h1 {
+            font-size: 32px;
+            font-weight: bold;
+            text-align: center;
+        }
 
-# 让用户输入文本来源，可以是网页链接或PDF文件路径
-source = st.text_input("请输入文本来源（网页链接或PDF文件路径）：")
+        p {
+            font-size: 18px;
+            text-align: center;
+        }
 
-# 让用户选择摘要比例，即摘要占原文的百分比
-ratio = st.slider("请选择摘要比例（0-1）：", 0.0, 1.0, 0.2)
+        textarea {
+            width: 100%;
+            height: 200px;
+            border: 2px solid #000;
+            padding: 10px;
+            resize: none;
+        }
 
-# 当用户点击“生成摘要”按钮时，执行以下操作
-if st.button("生成摘要"):
-    # 从文本来源提取文本
-    text = extract_text(source)
-    # 对文本进行摘要
-    summary = summarize_text(text, ratio)
-    # 在网页上显示原文和摘要，并计算摘要的评分（基于ROUGE指标）
-    st.subheader("原文")
-    st.write(text)
-    st.subheader("摘要")
-    st.write(summary)
-    st.subheader("摘要评分")
-    score = textacy.similarity.rouge(summary, text)
-    st.write(score)
+        button {
+            width: 200px;
+            height: 50px;
+            border: none;
+            background-color: #000;
+            color: #fff;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+        }
 
+        button:hover {
+            transform: scale(1.1);
+            background-color: #fff;
+            color: #000;
+        }
+
+        button:focus {
+            outline: none;
+        }
+
+        button:active {
+            transform: scale(0.9);
+        }
+
+        .result {
+            width: 100%;
+            margin-top: 20px;
+            border-top: 2px solid #000;
+            padding-top: 20px;
+        }
+
+        .result h2 {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .result p {
+            font-size: 18px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Text Summarizer 文本摘要工具</h1>
+        <p>Enter your text here 输入你的文本</p>
+        <textarea id="input" placeholder="Paste or type your text here 粘贴或输入你的文本"></textarea>
+        <button id="button">Generate Summary 生成摘要</button>
+        <div class="result" id="result">
+            <!-- The summary, score, keywords and references will be displayed here 摘要，评分，关键词和参考文献将在这里显示 -->
+        </div>
+    </div>
+    <script>
+        // This is a mock-up script to simulate the text summarization process 这是一个模拟脚本，用于模拟文本摘要的过程
+        // You can replace it with your own logic and algorithm 你可以用你自己的逻辑和算法替换它
+
+        // Get the elements from the document 从文档中获取元素
+        var input = document.getElementById("input");
+        var button = document.getElementById("button");
+        var result = document.getElementById("result");
+
+        // Add a click event listener to the button 给按钮添加一个点击事件监听器
+        button.addEventListener("click", function() {
+            // Get the input text 获取输入的文本
+            var text = input.value;
+
+            // Check if the input is empty 检查输入是否为空
+            if (text.trim() === "") {
+                // Alert the user 提示用户
+                alert("Please enter some text 请输入一些文本");
+                // Clear the result 清空结果
+                result.innerHTML = "";
+                // Return early 提前返回
+                return;
+            }
+
+            // Simulate the text summarization process 模拟文本摘要的过程
+            // Generate a summary, a score, some keywords and some references 生成一个摘要，一个评分，一些关键词和一些参考文献
+            var summary = text.slice(0, 100) + "..."; // A simple way to generate a summary is to take the first 100 characters of the text 生成摘要的一个简单方法是取文本的前100个字符
+            var score = Math.floor(Math.random() * 100) + "%"; // A random score between 0 and 100% 一个0到100%之间的随机评分
+            var keywords = text.split(" ").slice(0, 5).join(", "); // A simple way to generate keywords is to take the first 5 words of the text 生成关键词的一个简单方法是取文本的前5个单词
+            var references = "https://www.example.com"; // A dummy reference for demonstration purposes 一个用于演示目的的虚拟参考
+
+            // Display the results in the result element 在结果元素中显示结果
+            result.innerHTML = `
+                <h2>Summary 摘要</h2>
+                <p>${summary}</p>
+                <h2>Score 评分</h2>
+                <p>${score}</p>
+                <h2>Keywords 关键词</h2>
+                <p>${keywords}</p>
+                <h2>References 参考文献</h2>
+                <p>${references}</p>
+            `;
+        });
+    </script>
+</body>
+</html>
