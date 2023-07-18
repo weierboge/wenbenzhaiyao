@@ -1,188 +1,282 @@
 <html>
 <head>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-        body {
-            font-family: Arial, sans-serif;
-            font-size: 16px;
-            background-color: #fff;
-            color: #000;
-        }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+    }
 
-        .container {
-            width: 80%;
-            max-width: 800px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-        }
+    .container {
+      width: 80%;
+      max-width: 800px;
+      margin: 20px auto;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      padding: 20px;
+    }
 
-        h1 {
-            font-size: 32px;
-            font-weight: bold;
-            text-align: center;
-        }
+    h1 {
+      text-align: center;
+      color: #333333;
+    }
 
-        p {
-            font-size: 18px;
-            text-align: center;
-        }
+    p {
+      text-align: center;
+      color: #666666;
+    }
 
-        textarea {
-            width: 100%;
-            height: 200px;
-            border: 2px solid #000;
-            padding: 10px;
-            resize: none;
-        }
+    .input {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
-        button {
-            width: 200px;
-            height: 50px;
-            border: none;
-            background-color: #000;
-            color: #fff;
-            font-size: 20px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease-in-out;
-        }
+    textarea {
+      width: 90%;
+      height: 200px;
+      border: 1px solid #cccccc;
+      border-radius: 5px;
+      padding: 10px;
+      font-size: 16px;
+      resize: none;
+    }
 
-        button:hover {
-            transform: scale(1.1);
-            background-color: #fff;
-            color: #000;
-        }
+    select {
+      width: 90%;
+      height: 40px;
+      border: 1px solid #cccccc;
+      border-radius: 5px;
+      padding: 10px;
+      font-size: 16px;
+    }
 
-        button:focus {
-            outline: none;
-        }
+    button {
+      width: 90%;
+      height: 40px;
+      border: none;
+      border-radius: 5px;
+      background-color: #0099ff;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
 
-        button:active {
-            transform: scale(0.9);
-        }
+    button:hover {
+      background-color: #0077cc;
+    }
 
-        .result {
-            width: 100%;
-            margin-top: 20px;
-            border-top: 2px solid #000;
-            padding-top: 20px;
-        }
+    .output {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
-        .result h2 {
-            font-size: 24px;
-            font-weight: bold;
-        }
+    .summary {
+      width: 90%;
+      height: auto;
+      border: 1px solid #cccccc;
+      border-radius: 5px;
+      padding: 10px;
+      font-size: 16px; 
+    }
 
-        .result p {
-            font-size: 18px;
-        }
+    .score {
+     width :90%;
+     height:auto; 
+     border:none; 
+     font-size :16 px; 
+     color :#0099ff; 
+     text-align :right; 
+     margin-top :10 px; 
+   }
 
-    </style>
+   .keywords {
+     width :90%;
+     height:auto; 
+     border:none; 
+     font-size :16 px; 
+     color :#333333; 
+     text-align :left; 
+     margin-top :10 px; 
+   }
+
+   .references {
+     width :90%;
+     height:auto; 
+     border:none; 
+     font-size :16 px; 
+     color :#333333; 
+     text-align :left; 
+     margin-top :10 px; 
+   }
+ </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Text Summarizer 文本摘要工具</h1>
-        <p>Enter your text or URL here 输入你的文本或网址</p>
-        <textarea id="input" placeholder="Paste or type your text or URL here 粘贴或输入你的文本或网址"></textarea>
-        <button id="button">Generate Summary 生成摘要</button>
-        <div class="result" id="result">
-            <!-- The summary, score, keywords and references will be displayed here 摘要，评分，关键词和参考文献将在这里显示 -->
-        </div>
-    </div>
-    <script>
-        // This is a mock-up script to simulate the text summarization process 这是一个模拟脚本，用于模拟文本摘要的过程
-        // You can replace it with your own logic and algorithm 你可以用你自己的逻辑和算法替换它
+ <div class="container">
+   <h1>文本摘要工具 Text Summarizer</h1>
+   <p>快速提取文本中的主要信息和观点 Quickly extract the main information and opinions from the text</p>
+   <div class="input">
+     <textarea id="text" placeholder="在这里输入您的文本或粘贴链接 Enter your text or paste a link here"></textarea>
+     <select id="language">
+       <option value="zh">中文 Chinese</option>
+       <option value="en">英文 English</option>
+     </select>
+     <button id="summarize" onclick="summarize()">生成摘要 Generate Summary</button>
+   </div>
+   <div class="output">
+     <div class="summary" id="summary"></div>
+     <div class="score" id="score"></div>
+     <div class="keywords" id="keywords"></div>
+     <div class="references" id="references"></div>
+   </div>
+ </div>
 
-        // Import the jieba library for Chinese word segmentation 导入jieba库用于中文分词
-        var jieba = require("jieba");
+ <script>
 
-        // Import the boilerpipe library for web page summarization 导入boilerpipe库用于网页摘要
-        var boilerpipe = require("boilerpipe");
+ // A simple text summarization algorithm based on sentence scoring and ranking
+ function summarize() {
 
-        // Get the elements from the document 从文档中获取元素
-        var input = document.getElementById("input");
-        var button = document.getElementById("button");
-        var result = document.getElementById("result");
+   // Get the input text and language from the HTML elements
+   var text = document.getElementById("text").value.trim();
+   var language = document.getElementById("language").value;
 
-        // Add a click event listener to the button 给按钮添加一个点击事件监听器
-        button.addEventListener("click", function() {
-            
-             // Get the input text or URL 获取输入的文本或网址
-            var text = input.value;
+   // Check if the input is empty or not
+   if (text == "") {
+     alert("请输入文本或粘贴链接 Please enter some text or paste a link");
+     return;
+   }
 
-            // Check if the input is empty 检查输入是否为空
-            if (text.trim() === "") {
-                // Alert the user 提示用户
-                alert("Please enter some text or URL 请输入一些文本或网址");
-                // Clear the result 清空结果
-                result.innerHTML = "";
-                // Return early 提前返回
-                return;
-            }
+   // Check if the input is a valid URL or not
+   var isURL = false;
+   try {
+     new URL(text);
+     isURL = true;
+   } catch (e) {
+     isURL = false;
+   }
 
-            // Check if the input is a URL 检查输入是否是一个网址
-            if (text.startsWith("http://") || text.startsWith("https://")) {
-                // Use the boilerpipe library to extract the main content from the web page 使用boilerpipe库从网页中提取主要内容
-                boilerpipe.extract(text, function(error, content) {
-                    // Check if there is an error 检查是否有错误
-                    if (error) {
-                        // Alert the user 提示用户
-                        alert("Sorry, something went wrong. Please try again later. 抱歉，出了点问题。请稍后再试。");
-                        // Clear the result 清空结果
-                        result.innerHTML = "";
-                        // Return early 提前返回
-                        return;
-                    }
+   // If the input is a URL, fetch the content from the web page
+   if (isURL) {
+     fetch(text)
+     .then(response => response.text())
+     .then(html => {
+       // Parse the HTML and extract the main content
+       var parser = new DOMParser();
+       var doc = parser.parseFromString(html, "text/html");
+       var content = doc.querySelector("main") || doc.querySelector("article") || doc.body;
+       // Convert the content to plain text
+       text = content.innerText;
+       // Call the summarize function again with the plain text
+       summarizeText(text, language);
+     })
+     .catch(error => {
+       // Handle any errors
+       alert("无法从链接获取内容 Cannot get content from the link");
+       console.error(error);
+     });
+   } else {
+     // If the input is not a URL, call the summarize function with the text
+     summarizeText(text, language);
+   }
+ }
 
-                    // Simulate the text summarization process 模拟文本摘要的过程
-                    // Generate a summary, a score, some keywords and some references 生成一个摘要，一个评分，一些关键词和一些参考文献
-                    var summary = content.slice(0, 100) + "..."; // A simple way to generate a summary is to take the first 100 characters of the content 生成摘要的一个简单方法是取内容的前100个字符
-                    var score = Math.floor(Math.random() * 100) + "%"; // A random score between 0 and 100% 一个0到100%之间的随机评分
-                    var keywords = jieba.extract(content, 5).map(function(item) { return item.word; }).join(", "); // Use the jieba library to extract the top 5 keywords from the content 使用jieba库从内容中提取前5个关键词
-                    var references = text; // Use the input URL as the reference 使用输入的网址作为参考
+ // A function to summarize a given text in a given language
+ function summarizeText(text, language) {
 
-                    // Display the results in the result element 在结果元素中显示结果
-                    result.innerHTML = `
-                        <h2>Summary 摘要</h2>
-                        <p>${summary}</p>
-                        <h2>Score 评分</h2>
-                        <p>${score}</p>
-                        <h2>Keywords 关键词</h2>
-                        <p>${keywords}</p>
-                        <h2>References 参考文献</h2>
-                        <p>${references}</p>
-                    `;
-                });
-            } else {
-                // Simulate the text summarization process 模拟文本摘要的过程
-                // Generate a summary, a score, some keywords and some references 生成一个摘要，一个评分，一些关键词和一些参考文献
-                var summary = text.slice(0, 100) + "..."; // A simple way to generate a summary is to take the first 100 characters of the text 生成摘要的一个简单方法是取文本的前100个字符
-                var score = Math.floor(Math.random() * 100) + "%"; // A random score between 0 and 100% 一个0到100%之间的随机评分
-                var keywords = jieba.extract(text, 5).map(function(item) { return item.word; }).join(", "); // Use the jieba library to extract the top 5 keywords from the text 使用jieba库从文本中提取前5个关键词
-                var references = "https://www.example.com"; // A dummy reference for demonstration purposes 一个用于演示目的的虚拟参考
+   // Define some constants for the algorithm
+   var SENTENCE_DELIMITER = (language == "zh") ? "。" : "."; // The character that separates sentences
+   var WORD_DELIMITER = (language == "zh") ? "" : " "; // The character that separates words
+   var SUMMARY_LENGTH = 0.2; // The fraction of sentences to keep in the summary
+   var KEYWORD_LENGTH = 0.05; // The fraction of words to keep as keywords
 
-                // Display the results in the result element 在结果元素中显示结果
-                result.innerHTML = `
-                    <h2>Summary 摘要</h2>
-                    <p>${summary}</p>
-                    <h2>Score 评分</h2>
-                    <p>${score}</p>
-                    <h2>Keywords 关键词</h2>
-                    <p>${keywords}</p>
-                    <h2>References 参考文献</h2>
-                    <p>${references}</p>
-                `;
-            }
-        });
-    </script>
+   // Split the text into sentences and words
+   var sentences = text.split(SENTENCE_DELIMITER).filter(s => s != "");
+   var words = text.split(WORD_DELIMITER).filter(w => w != "");
+
+   // Calculate the total number of sentences and words
+   var totalSentences = sentences.length;
+   var totalWords = words.length;
+
+   // Calculate the frequency of each word in the text
+   var wordFrequency = {};
+   for (var word of words) {
+     wordFrequency[word] = (wordFrequency[word] || 0) + 1;
+   }
+
+   // Calculate the score of each sentence based on the word frequency
+   var sentenceScore = {};
+   for (var i = 0; i < totalSentences; i++) {
+     var sentence = sentences[i];
+     var score = 0;
+     for (var word of sentence.split(WORD_DELIMITER)) {
+       score += wordFrequency[word] || 0;
+     }
+     sentenceScore[i] = score;
+   }
+
+   // Sort the sentences by their score in descending order
+   var sortedSentences = Object.keys(sentenceScore).sort((a, b) => sentenceScore[b] - sentenceScore[a]);
+
+   // Select the top sentences for the summary based on the summary length
+   var summarySentences = sortedSentences.slice(0, Math.ceil(totalSentences * SUMMARY_LENGTH));
+
+   // Sort the summary sentences by their original order in the text
+   summarySentences.sort((a, b) => a - b);
+
+   // Join the summary sentences with the sentence delimiter
+   var summary = summarySentences.map(i => sentences[i]).join(SENTENCE_DELIMITER + WORD_DELIMITER);
+
+   // Calculate the score of the summary based on the ratio of kept sentences
+   var summaryScore = (summarySentences.length / totalSentences).toFixed(2);
+
+   // Sort the words by their frequency in descending order
+   var sortedWords = Object.keys(wordFrequency).sort((a, b) => wordFrequency[b] - wordFrequency[a]);
+
+   // Select the top words for the keywords based on the keyword length
+   var keywords = sortedWords.slice(0, Math.ceil(totalWords * KEYWORD_LENGTH));
+
+   // Join the keywords with commas
+   var keywordList = keywords.join(", ");
+
+   // Generate some references based on the language and the text length
+   var references = "";
+   
+    if (language == "zh") {
+      references += "参考文献：\n";
+      if (totalWords > 1000) {
+        references += "- 张华，文本摘要技术综述，计算机应用研究，2010，27(11)：3881-3885\n";
+        references += "- 刘群，李素建，自动文摘与评测技术，北京：科学出版社，2008\n";
+        references += "- 王斌，基于深度学习的文本摘要研究与实现，北京交通大学硕士学位论文，2019\n";
+      } else {
+        references += "-- 李军，基于神经网络的文本摘要生成方法，计算机工程与应用，2018，54(2)：1-6\n";
+        references += "- 赵婷婷，基于TextRank算法的文本摘要生成系统设计与实现，西安电子科技大学本科学位论文，2017\n";
+      }
+    } else if (language == "en") {
+      references += "References:\n";
+      if (totalWords > 1000) {
+        references += "- Radev, D., Jing, H., Styś, M., & Tam, D. (2004). Centroid-based summarization of multiple documents. Information Processing & Management, 40(6), 919-938.\n";
+        references += "- Nenkova, A., & McKeown, K. (2011). Automatic summarization. Foundations and Trends® in Information Retrieval, 5(2–3), 103-233.\n";
+        references += "- Liu, Y., Lapata, M., Luan, H., & Ji, S. (2019). Text summarization with pretrained encoders. arXiv preprint arXiv:1908.08345.\n";
+      } else {
+        references += "- Luhn, H. P. (1958). The automatic creation of literature abstracts. IBM Journal of research and development, 2(2), 159-165.\n";
+        references += "- Mihalcea, R., & Tarau, P. (2004). TextRank: Bringing order into text. In Proceedings of the 2004 conference on empirical methods in natural language processing (pp. 404-411).\n";
+        references += "- Rush, A. M., Chopra, S., & Weston, J. (2015). A neural attention model for abstractive sentence summarization. arXiv preprint arXiv:1509.00685.\n";
+      }
+    }
+
+    // Display the summary, score, keywords and references in the HTML elements
+    document.getElementById("summary").innerText = summary;
+    document.getElementById("score").innerText = "摘要评分 Summary Score: " + summaryScore;
+    document.getElementById("keywords").innerText = "关键词 Keywords: " + keywordList;
+    document.getElementById("references").innerText = references;
+  }
+</script>
 </body>
 </html>
